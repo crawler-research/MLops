@@ -1,0 +1,22 @@
+
+FROM python:3.10-slim AS builder
+ENV PIP_NO_CACHE_DIR=1
+WORKDIR /build
+RUN python -m venv /venv
+ENV PATH=/venv/bin:$PATH
+RUN pip install --upgrade pip
+RUN pip install pillow --index-url https://pypi.org/simple
+RUN pip install torch torchvision --index-url https://download.pytorch.org/whl/cpu
+
+
+FROM python:3.10-slim AS runtime
+ENV PATH=/venv/bin:$PATH \
+PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
+WORKDIR /app
+
+
+COPY --from=builder /venv /venv
+COPY model.pt inference.py ./
+
+
+ENTRYPOINT ["/venv/bin/python", "inference.py"]
