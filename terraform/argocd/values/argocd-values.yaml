@@ -1,0 +1,92 @@
+global:
+  domain: argocd.local
+
+configs:
+  params:
+    server.insecure: true
+    server.disable.auth: false
+  cm:
+    timeout.reconciliation: 180s
+    timeout.hard.reconciliation: 0s
+  rbac:
+    policy.default: role:readonly
+    policy.csv: |
+      p, role:admin, applications, *, */*, allow
+      p, role:admin, clusters, *, *, allow
+      p, role:admin, repositories, *, *, allow
+      g, argocd-admins, role:admin
+
+server:
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 8080
+  extraArgs:
+    - --insecure
+  config:
+    url: http://localhost:8080
+    oidc.config: |
+      name: OIDC
+      issuer: https://argocd.local/api/dex
+      clientId: argocd
+      clientSecret: $oidc.clientSecret
+      requestedScopes: ["openid", "profile", "email", "groups"]
+
+dex:
+  enabled: false
+
+redis:
+  enabled: true
+
+controller:
+  replicas: 1
+  resources:
+    requests:
+      memory: "128Mi"
+      cpu: "50m"
+    limits:
+      memory: "256Mi"
+      cpu: "100m"
+
+repoServer:
+  replicas: 1
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "25m"
+    limits:
+      memory: "128Mi"
+      cpu: "50m"
+
+server:
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "25m"
+    limits:
+      memory: "128Mi"
+      cpu: "50m"
+
+dex:
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "10m"
+    limits:
+      memory: "64Mi"
+      cpu: "25m"
+
+redis:
+  resources:
+    requests:
+      memory: "32Mi"
+      cpu: "10m"
+    limits:
+      memory: "64Mi"
+      cpu: "25m"
+
+applicationSet:
+  enabled: false
+
+notifications:
+  enabled: false
