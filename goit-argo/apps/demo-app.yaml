@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: demo-app
+  namespace: infra-tools
+  labels:
+    environment: dev
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/crawler-research/MLops.git
+    targetRevision: lesson-7
+    path: goit-argo/demo-app
+    helm:
+      values: |
+        replicaCount: 2
+        image:
+          repository: nginx
+          tag: "1.21"
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: application
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
