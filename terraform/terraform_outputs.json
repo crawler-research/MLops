@@ -1,0 +1,32 @@
+{
+  "log_metrics_lambda_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:lambda:us-east-1:024910003979:function:mlops-train-automation-log-metrics"
+  },
+  "log_metrics_lambda_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "mlops-train-automation-log-metrics"
+  },
+  "step_function_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:states:us-east-1:024910003979:stateMachine:mlops-train-automation-pipeline"
+  },
+  "step_function_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "mlops-train-automation-pipeline"
+  },
+  "validate_lambda_arn": {
+    "sensitive": false,
+    "type": "string",
+    "value": "arn:aws:lambda:us-east-1:024910003979:function:mlops-train-automation-validate"
+  },
+  "validate_lambda_name": {
+    "sensitive": false,
+    "type": "string",
+    "value": "mlops-train-automation-validate"
+  }
+}
