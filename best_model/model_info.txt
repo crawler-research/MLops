@@ -1,0 +1,5 @@
+Best Model Information
+==================================================
+Run ID: 38ac04d7779c48de8df00c5162e1ec59
+Model URI: runs:/38ac04d7779c48de8df00c5162e1ec59/model
+Downloaded at: 2025-10-21 22:19:58
