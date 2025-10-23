@@ -1,0 +1,48 @@
+- job_name: 'ml-inference-service'
+  scrape_interval: 15s
+  scrape_timeout: 10s
+  metrics_path: '/metrics'
+  
+  kubernetes_sd_configs:
+    - role: pod
+      namespaces:
+        names:
+          - ml-inference
+  
+  relabel_configs:
+    - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+      action: keep
+      regex: true
+    
+    - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+      action: replace
+      target_label: __metrics_path__
+      regex: (.+)
+    
+    - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+      action: replace
+      regex: ([^:]+)(?::\d+)?;(\d+)
+      replacement: $1:$2
+      target_label: __address__
+    
+    - source_labels: [__meta_kubernetes_pod_name]
+      action: replace
+      target_label: pod
+    
+    - source_labels: [__meta_kubernetes_namespace]
+      action: replace
+      target_label: namespace
+    
+    - source_labels: [__meta_kubernetes_pod_label_app_kubernetes_io_name]
+      action: replace
+      target_label: app
+
+# Alternative: Direct service endpoint scraping
+- job_name: 'ml-inference-service-endpoints'
+  scrape_interval: 30s
+  static_configs:
+    - targets:
+        - 'ml-inference-service.ml-inference.svc.cluster.local:80'
+      labels:
+        service: 'ml-inference'
+        environment: 'production'
